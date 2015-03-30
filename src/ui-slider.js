@@ -11,6 +11,7 @@
       this.min = 0;
       this.max = 100;
       this.step = 1;
+      this.bubbles = [];
 
     })
 
@@ -29,11 +30,21 @@
 
             tElement.append(
               // Use a virtual scope key to allow
-                '<div class="ui-slider__thumb" ng-model="__' + Math.random().toString(36).substring(7) + '"></div>'
+              '<div class="ui-slider__thumb" ng-model="__' + Math.random().toString(36).substring(7) + '"></div>'
             );
           }
 
           return function (scope, iElement, iAttrs, controller) {
+
+            for (var x = iAttrs.min; x <= iAttrs.max; x++) {
+              var val = (x - iAttrs.min ) / (iAttrs.max - iAttrs.min) * 100;
+              var bubble = angular.element('<div style="position: absolute; left: ' +  val + '%" class="ui-slider__bubble bubble' + x + '"></div>');
+              controller.bubbles.push({
+                value: x,
+                element: bubble
+              });
+              iElement.append(bubble);
+            }
 
             if (!iElement.hasClass('ui-slider')) {
               iElement.addClass('ui-slider');
@@ -239,6 +250,16 @@
               the_thumb_pos = the_thumb_pos.toFixed(5);
               iElement.css('left', the_thumb_pos + '%');
             });
+
+            // Set 'covered'
+            for (var i = 0; i < uiSliderCtrl.bubbles.length; i++) {
+              if (uiSliderCtrl.bubbles[i].value <= ngModel.$viewValue) {
+                uiSliderCtrl.bubbles[i].element.addClass('covered');
+              }
+              else {
+                uiSliderCtrl.bubbles[i].element.removeClass('covered');
+              }
+            }
           };
 
           ////////////////////////////////////////////////////////////////////
