@@ -367,7 +367,8 @@
 
             _cached_layout_values();
 
-            var the_thumb_value = uiSliderCtrl.min + (_cache.lastPos - _cache.trackOrigine) / _cache.trackSize * (uiSliderCtrl.max - uiSliderCtrl.min);
+            var the_thumb_value = uiSliderCtrl.min +
+              (_cache.trackSize / 2 / (uiSliderCtrl.max - uiSliderCtrl.min) + _cache.lastPos - _cache.trackOrigine) / _cache.trackSize * (uiSliderCtrl.max - uiSliderCtrl.min);
             the_thumb_value = getFormattedValue(the_thumb_value);
 
             ngModel.$setViewValue(parseFloat(the_thumb_value.toFixed(5)));
